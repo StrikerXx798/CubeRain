@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Cube : MonoBehaviour
+public class Cube : Element
 {
     private const int MinDestroyDelay = 2;
     private const int MaxDestroyDelay = 5;
@@ -14,13 +14,12 @@ public class Cube : MonoBehaviour
     private const float MaxSaturation = 1f;
     private const float MinBrightness = 0.7f;
     private const float MaxBrightness = 1f;
+    
+    [SerializeField] private BombSpawner _bombSpawner;
 
     private Renderer _renderer;
     private bool _isTouchPlatform;
-    private Color _color;
-    private IEnumerator _coroutine;
-
-    public event Action<Cube> Destroyed;
+    private Coroutine _coroutine;
 
     private void Awake()
     {
@@ -30,14 +29,13 @@ public class Cube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<Platform>(out var _) == false)
+        if (_coroutine is not null)
             return;
 
-        if (_coroutine != null)
-            return;
-
-        _coroutine = OnTouchedPlatform();
-        StartCoroutine(_coroutine);
+        if (collision.gameObject.TryGetComponent<Platform>(out var _))
+        {
+            _coroutine = StartCoroutine(OnTouchedPlatform());
+        }
     }
 
     private void SetRandomColor()
@@ -45,7 +43,7 @@ public class Cube : MonoBehaviour
         if (_renderer is null)
             return;
 
-        _color = Random.ColorHSV(
+        _renderer.material.color = Random.ColorHSV(
             MinHue,
             MaxHue,
             MinSaturation,
@@ -55,8 +53,6 @@ public class Cube : MonoBehaviour
             Opacity,
             Opacity
         );
-
-        _renderer.material.color = _color;
     }
 
     private void ResetToDefault()
@@ -78,6 +74,7 @@ public class Cube : MonoBehaviour
 
         yield return wait;
 
+        _bombSpawner.Get();
         Destroyed?.Invoke(this);
         ResetToDefault();
     }
