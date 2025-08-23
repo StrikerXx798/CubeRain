@@ -5,6 +5,7 @@ public class Bomb : Element
 {
     private const float MinTime = 0f;
     private const float MinAlpha = 0f;
+    private const float MaxAlpha = 1f;
 
     [SerializeField] private Exploder _exploder;
     [SerializeField] private float _minLifeTime = 2f;
@@ -14,22 +15,20 @@ public class Bomb : Element
     private Renderer _renderer;
     private Coroutine _explodeRoutine;
 
-    private void Start()
+    private void OnEnable()
     {
         _renderer = GetComponent<Renderer>();
-
-        if (_explodeRoutine is not null)
-            return;
-
-        StartCoroutine(ExplodeCoroutine());
+        _explodeRoutine = StartCoroutine(ExplodeCoroutine());
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (_explodeRoutine is null)
-            return;
-
-        StopCoroutine(_explodeRoutine);
+        if (_explodeRoutine is not null)
+        {
+            StopCoroutine(_explodeRoutine);
+            _explodeRoutine = null;
+        }
+        ChangeAlpha(MaxAlpha);
     }
 
     private void ChangeAlpha(float alpha)
@@ -60,5 +59,6 @@ public class Bomb : Element
 
         _exploder.CreateExplosion(gameObject.transform.position);
         Destroyed?.Invoke(this);
-    }
+		ChangeAlpha(MaxAlpha);
+	}
 }

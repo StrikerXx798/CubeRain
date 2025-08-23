@@ -53,7 +53,7 @@ public class Cube : Element
         );
     }
 
-    private void ResetToDefault()
+    public void ResetToDefault()
     {
         _renderer.material.color = Color.gray;
         _isTouchPlatform = false;
@@ -73,6 +73,7 @@ public class Cube : Element
         yield return wait;
 
         Destroyed?.Invoke(this);
-        ResetToDefault();
+        StopCoroutine(_coroutine);
+        _coroutine = null;
     }
 }

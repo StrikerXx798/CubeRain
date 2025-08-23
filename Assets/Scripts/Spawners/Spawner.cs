@@ -21,33 +21,24 @@ public abstract class Spawner<T> : MonoBehaviour where T : Element
     {
         Pool = new ObjectPool<T>
         (
-            createFunc: SpawnElement,
-            actionOnGet: OnGetElement,
-            actionOnRelease: (obj) => obj.gameObject.SetActive(false),
-            actionOnDestroy:
-            OnDestroyElement,
+            createFunc: OnCreatePoolElement,
+            actionOnGet: OnGetPoolElement,
+            actionOnRelease: OnReleasePoolElement,
+            actionOnDestroy: OnDestroyPoolElement,
             defaultCapacity: _maxPoolSize,
             maxSize: _maxPoolSize,
             collectionCheck: true
         );
     }
 
-    private T SpawnElement()
+    protected virtual T OnCreatePoolElement()
     {
         var element = Instantiate(_prefab, transform.position, Quaternion.identity);
-        element.Destroyed += (e) => ReleaseElement(e as T);
 
         return element;
     }
 
-    private void ReleaseElement(T element)
-    {
-        Pool.Release(element);
-        ActiveCountChanged?.Invoke(Pool.CountActive);
-        ElementDestroyed?.Invoke(element);
-    }
-
-    private void OnGetElement(T element)
+    protected virtual void OnGetPoolElement(T element)
     {
         element.transform.position = transform.position;
         element.gameObject.SetActive(true);
@@ -57,9 +48,15 @@ public abstract class Spawner<T> : MonoBehaviour where T : Element
         ActiveCountChanged?.Invoke(Pool.CountActive);
     }
 
-    private void OnDestroyElement(T element)
+    protected virtual void OnReleasePoolElement(T element)
     {
-        element.Destroyed -= (e) => ReleaseElement(e as T);
+        element.gameObject.SetActive(false);
+        ActiveCountChanged?.Invoke(Pool.CountActive);
+        ElementDestroyed?.Invoke(element);
+    }
+
+    protected virtual void OnDestroyPoolElement(T element)
+    {
         CreatedCountChanged?.Invoke(Pool.CountAll);
         Destroy(element.gameObject);
     }
