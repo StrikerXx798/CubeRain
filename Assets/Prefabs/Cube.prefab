@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4527147558694948741}
   - component: {fileID: 1926445761407463971}
   - component: {fileID: 4134111255909496781}
-  - component: {fileID: 1867031061433508413}
   - component: {fileID: 4089766137221830052}
   m_Layer: 0
   m_Name: Cube
@@ -138,21 +137,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1867031061433508413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4290860878916823788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33be52dfc5e745119c214d4932cf1cf1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefab: {fileID: 4147063208605649832, guid: 1e45e240f5886f34999bc58b7b91eabe, type: 3}
-  _repeatRate: 0
-  _maxPoolSize: 100
 --- !u!114 &4089766137221830052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,4 +149,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3adb3bda09c34abcb9713dee45fb5ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bombSpawner: {fileID: 1867031061433508413}

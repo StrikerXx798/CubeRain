@@ -1,6 +1,10 @@
-﻿public class BombSpawner : Spawner<Bomb>
+using UnityEngine;
+
+public class BombSpawner : Spawner<Bomb>
 {
-    private void Start()
+    public void AttachBombToCube(Cube cube)
     {
+        var bomb = Pool.Get();
+        bomb.transform.position = cube.transform.position;
     }
 }

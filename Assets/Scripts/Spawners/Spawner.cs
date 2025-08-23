@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -8,50 +7,29 @@ public abstract class Spawner<T> : MonoBehaviour where T : Element
     [SerializeField] private float _repeatRate;
     [SerializeField] private int _maxPoolSize;
 
-    private ObjectPool<T> _pool;
-    private Coroutine _spawnRoutine;
-
     private int _spawnedCount;
 
+    public event System.Action<int> SpawnedCountChanged;
+    public event System.Action<int> CreatedCountChanged;
+    public event System.Action<int> ActiveCountChanged;
+    public event System.Action<T> ElementDestroyed;
 
-    public int SpawnedCount => _spawnedCount;
-    public int CreatedCount => _pool.CountAll;
-    public int ActiveCount => _pool.CountActive;
+    protected float RepeatRate => _repeatRate;
+    protected ObjectPool<T> Pool { get; private set; }
 
     private void Awake()
     {
-        _pool = new ObjectPool<T>
+        Pool = new ObjectPool<T>
         (
             createFunc: SpawnElement,
             actionOnGet: OnGetElement,
             actionOnRelease: (obj) => obj.gameObject.SetActive(false),
             actionOnDestroy:
             OnDestroyElement,
-            defaultCapacity:
-            _maxPoolSize,
-            maxSize:
-            _maxPoolSize,
-            collectionCheck:
-            true
+            defaultCapacity: _maxPoolSize,
+            maxSize: _maxPoolSize,
+            collectionCheck: true
         );
-    }
-
-    private void Start()
-    {
-        _spawnRoutine = StartCoroutine(SpawnRoutine());
-    }
-
-    public void Get()
-    {
-        _pool.Get();
-    }
-
-    private void OnDestroy()
-    {
-        if (_spawnRoutine != null)
-        {
-            StopCoroutine(_spawnRoutine);
-        }
     }
 
     private T SpawnElement()
@@ -64,19 +42,9 @@ public abstract class Spawner<T> : MonoBehaviour where T : Element
 
     private void ReleaseElement(T element)
     {
-        _pool.Release(element);
-    }
-
-    private IEnumerator SpawnRoutine()
-    {
-        var wait = new WaitForSeconds(_repeatRate);
-
-        while (enabled)
-        {
-            _pool.Get();
-
-            yield return wait;
-        }
+        Pool.Release(element);
+        ActiveCountChanged?.Invoke(Pool.CountActive);
+        ElementDestroyed?.Invoke(element);
     }
 
     private void OnGetElement(T element)
@@ -84,11 +52,15 @@ public abstract class Spawner<T> : MonoBehaviour where T : Element
         element.transform.position = transform.position;
         element.gameObject.SetActive(true);
         _spawnedCount++;
+        SpawnedCountChanged?.Invoke(_spawnedCount);
+        CreatedCountChanged?.Invoke(Pool.CountAll);
+        ActiveCountChanged?.Invoke(Pool.CountActive);
     }
 
     private void OnDestroyElement(T element)
     {
         element.Destroyed -= (e) => ReleaseElement(e as T);
+        CreatedCountChanged?.Invoke(Pool.CountAll);
         Destroy(element.gameObject);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Exploder : MonoBehaviour
 {
-    private const float UpwardsModifier = 1.5f;
+    private const float UpwardsModifier = 0.5f;
 
     [SerializeField] private ExplosionEffect _explosionEffectPrefab;
     [SerializeField] private float _baseExplosionRadius = 10f;

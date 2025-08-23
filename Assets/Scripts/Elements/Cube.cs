@@ -14,8 +14,6 @@ public class Cube : Element
     private const float MaxSaturation = 1f;
     private const float MinBrightness = 0.7f;
     private const float MaxBrightness = 1f;
-    
-    [SerializeField] private BombSpawner _bombSpawner;
 
     private Renderer _renderer;
     private bool _isTouchPlatform;
@@ -74,7 +72,6 @@ public class Cube : Element
 
         yield return wait;
 
-        _bombSpawner.Get();
         Destroyed?.Invoke(this);
         ResetToDefault();
     }

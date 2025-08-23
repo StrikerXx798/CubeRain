@@ -716,6 +716,53 @@ RectTransform:
   m_AnchoredPosition: {x: 160, y: -943}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &591756180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 591756182}
+  - component: {fileID: 591756181}
+  m_Layer: 0
+  m_Name: BombSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &591756181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591756180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33be52dfc5e745119c214d4932cf1cf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 4147063208605649832, guid: 1e45e240f5886f34999bc58b7b91eabe, type: 3}
+  _repeatRate: 0
+  _maxPoolSize: 100
+--- !u!4 &591756182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591756180}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 144, y: 300, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &908509581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1055,7 @@ GameObject:
   - component: {fileID: 1484755638}
   - component: {fileID: 1484755639}
   m_Layer: 0
-  m_Name: Spawn
+  m_Name: CubeSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1042,8 +1089,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 4089766137221830052, guid: 704eab16d103ec34e8c1b2582ff57f76, type: 3}
-  _repeatRate: 1
+  _repeatRate: 0.5
   _maxPoolSize: 200
+  _bombSpawner: {fileID: 591756181}
 --- !u!1 &1506811237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,7 +1580,8 @@ GameObject:
   - component: {fileID: 1709946703}
   - component: {fileID: 1709946702}
   - component: {fileID: 1709946701}
-  - component: {fileID: 1709946700}
+  - component: {fileID: 1709946706}
+  - component: {fileID: 1709946705}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1540,26 +1589,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1709946700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1709946699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bfa620906cb45bd80072a90a27c086e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cubesTexts:
-  - {fileID: 177453081}
-  - {fileID: 1628645353}
-  - {fileID: 1639557372}
-  _bombsTexts:
-  - {fileID: 1506811238}
-  - {fileID: 506378427}
-  - {fileID: 908509582}
 --- !u!114 &1709946701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1648,6 +1677,40 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1709946705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709946699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31788b251e6042f78e0d0c66b61cd970, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawner: {fileID: 1484755639}
+  _stats:
+  - {fileID: 177453081}
+  - {fileID: 1628645353}
+  - {fileID: 1639557372}
+--- !u!114 &1709946706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709946699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92c5b20ae9d743fa8510e9d05dc7fc4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawner: {fileID: 591756181}
+  _stats:
+  - {fileID: 1506811238}
+  - {fileID: 506378427}
+  - {fileID: 908509582}
 --- !u!1001 &2059077307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1785,6 +1848,7 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 1484755638}
+  - {fileID: 591756182}
   - {fileID: 5971141386515329911}
   - {fileID: 2059077307}
   - {fileID: 52454263}
